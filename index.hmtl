@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Made By @imam_habibii</title>
+    <style>
+        /* General body styling */
+        body {
+            background-color: #e3f2fd; /* Light blue background */
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        /* Main container */
+        .container {
+            background-color: #ffffff; /* White background for the container */
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            text-align: center;
+            animation: popIn 0.8s ease;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        /* Input fields */
+        input[type="text"], select {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            box-sizing: border-box;
+            border: 2px solid #007bff; /* Blue border */
+            border-radius: 8px; /* Rounded corners */
+            transition: all 0.3s;
+        }
+
+        input[type="text"]:focus, select:focus {
+            border-color: #0056b3; /* Darker blue on focus */
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+        }
+
+        /* Button styling */
+        button {
+            background-color: #007bff; /* Blue button */
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px; /* More rounded corners */
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s, box-shadow 0.3s ease;
+            font-size: 16px;
+            font-weight: bold;
+            position: relative; /* For animations */
+            overflow: hidden; /* To show the shadow */
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(0);
+            transition: transform 0.4s ease;
+            border-radius: 8px; /* Match the button corners */
+        }
+
+        button:hover::before {
+            transform: scale(1);
+        }
+
+        button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #007bff; /* Blue border for result */
+            background-color: #e9f7ff; /* Light blue background for result */
+            border-radius: 8px;
+            display: none;
+        }
+
+        .barcode-img {
+            margin-top: 20px;
+        }
+
+        /* New subtitle */
+        .subtitle {
+            font-size: 16px;
+            color: #555;
+            margin-top: -10px;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        /* Download button */
+        #downloadBtn {
+            display: inline-block;
+            margin-top: 40px;
+            background-color: #28a745; /* Green button */
+            border: none;
+            padding: 12px 24px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px; /* More rounded corners */
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            position: relative; /* For animations */
+            overflow: hidden; /* To show the shadow */
+        }
+
+        #downloadBtn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(0);
+            transition: transform 0.4s ease;
+            border-radius: 8px; /* Match the button corners */
+        }
+
+        #downloadBtn:hover::before {
+            transform: scale(1);
+        }
+
+        #downloadBtn:hover {
+            background-color: #218838; /* Darker green on hover */
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Button container to move it lower */
+        .button-container {
+            margin-top: 40px;
+            display: flex;
+            justify-content: center;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Tesco Reduced Barcode Gen</h1>
+    <div class="subtitle">@Imam_habibii X Coupon Place</div>
+
+    <form id="barcodeForm">
+        <label for="barcodeInput">Input Your Barcode:</label>
+        <input type="text" id="barcodeInput" name="barcode" placeholder="Enter barcode here" required>
+
+        <label for="priceSelect">Select New Price (4p - 9p):</label>
+        <select id="priceSelect" name="price">
+            <option value="4">4p</option>
+            <option value="5">5p</option>
+            <option value="6">6p</option>
+            <option value="7">7p</option>
+            <option value="8">8p</option>
+            <option value="9">9p</option>
+        </select>
+
+        <button type="button" onclick="generateBarcode()">Generate Barcode</button>
+    </form>
+
+    <div class="result" id="resultBox">
+        <h2>New Barcode With Discount!</h2>
+        <img id="barcodeImage" class="barcode-img" alt="Generated Barcode" />
+        
+        <!-- Download button moved lower -->
+        <div class="button-container">
+            <button id="downloadBtn" onclick="downloadBarcode()">Download Barcode</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function generateBarcode() {
+        // Get user input
+        let barcode = document.getElementById('barcodeInput').value;
+        let price = document.getElementById('priceSelect').value;
+
+        // Generate random number (01-09)
+        let randomNum = Math.floor(Math.random() * 9) + 1;
+        let formattedRandomNum = ("0" + randomNum).slice(-2);
+
+        // Generate final barcode format
+        let finalBarcode = `971${barcode}70000${price}${formattedRandomNum}`;
+
+        // Create the URL for TEC-IT barcode generator (Code 128)
+        let barcodeUrl = `https://barcode.tec-it.com/barcode.ashx?data=${finalBarcode}&code=Code128&dpi=96`;
+
+        // Set the barcode image src to the TEC-IT barcode URL
+        document.getElementById('barcodeImage').src = barcodeUrl;
+
+        // Display the result box
+        document.getElementById('resultBox').style.display = "block";
+    }
+
+    function downloadBarcode() {
+        // Get the barcode image element
+        let img = document.getElementById('barcodeImage');
+        
+        // Create an anchor element to trigger the download
+        let link = document.createElement('a');
+        link.href = img.src;
+        link.download = 'generated_barcode.png';
+        
+        // Simulate the click to download the image
+        link.click();
+    }
+</script>
+
+</body>
+</html>
